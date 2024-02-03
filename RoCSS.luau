@@ -5,7 +5,6 @@ local plr = game.Players.LocalPlayer
 
 local css = {}
 
-
 local function PlayTween(obj, ti, properties)
 	local tween = ts:Create(obj, ti, properties)
 	tween:Play()
@@ -29,27 +28,27 @@ local function HoverEffect(obj: TextButton, classinfo)
 	for prop,val in hoverinfo do
 		original[prop] = obj[prop]
 	end
-	
-	
+
+
 	local propsToTween = {}
 	if classinfo.transition then
 		for _,v in classinfo.transition do
 			propsToTween[v] = hoverinfo[v]
 		end
 	end
-	
+
 	local instantChanges = {}
 	for i,v in hoverinfo do
 		if not propsToTween[i] then instantChanges[i] = v end
 	end
-	
+
 	obj.MouseEnter:Connect(function()
 		PlayTween(obj, TweenInfo.new(classinfo.transition_time or .5), propsToTween)
 		for i,v in instantChanges do
 			obj[i] = v
 		end
 	end)
-	
+
 	obj.MouseLeave:Connect(function()
 		for i,v in original do
 			if classinfo.transition and table.find(classinfo.transition, i) then
@@ -61,32 +60,41 @@ local function HoverEffect(obj: TextButton, classinfo)
 			end
 		end
 	end)
-	
-	
+
+
 end
 
 
 local function manageclass(classname, classinfo)
 	local classitems = tags:GetTagged(classname)
-	
-	
+
+
 	for _,v in classitems do
 		for property, value in classinfo do
 			if HasProperty(v,property) and not v:FindFirstChild(property) then v[property] = value end
 		end
-		
-		
+
+
 		if classinfo.onhover then HoverEffect(v, classinfo) end
 	end
 end
 
 
 
-function css.init(stylesheet)
+function css.init(stylesheet: {}?)
+	if not stylesheet then
+		local desc = game.ReplicatedStorage:GetDescendants()
+		for _,c in desc do
+			if c.Name:match(".rcss") and c:IsA("ModuleScript") then
+				css.init(require(c))
+			end
+		end
+		return
+	end
+
 	for class, info in stylesheet do
 		manageclass(class, info)
 	end
-	print("Classes successfully setup")
 end
 
 return css

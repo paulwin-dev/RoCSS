@@ -1,6 +1,7 @@
 site_name: RoCSS Documentation
 nav:
 - Home: index.md
+- Changelog: changelog.md
 - 'Getting Started':
     - Installation: installation.md
     - Setup: setup.md
