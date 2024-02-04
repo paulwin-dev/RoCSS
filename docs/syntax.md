@@ -1,8 +1,11 @@
 ## Basic Syntax
+```lua
+Property = Value
+```
 Class information should always be in the `Property = Value` format. This **applies to every item in the dictionary.** For example, to change the `Transparency`, your line of code should look like this:
 
 ```lua
-Transparency = .5
+Transparency = .5,
 ```
 
 ???+ note "Tip"
@@ -10,7 +13,7 @@ Transparency = .5
 
 
 ## Advanced Syntax
-In addition to basic Properties, RoCSS supports transition and hover values.
+In addition to basic `Properties`, RoCSS supports transition and hover values.
 
 
 ### **transition**
