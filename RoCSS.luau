@@ -112,7 +112,6 @@ end
 local function manageclass(classname, classinfo)
 	local classitems = tags:GetTagged(classname)
 
-
 	for _,v in classitems do
 		for property, value in classinfo do
 			if HasProperty(v,property) and not v:FindFirstChild(property) then v[property] = value end
