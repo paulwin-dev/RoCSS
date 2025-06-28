@@ -18,7 +18,7 @@ In addition to basic `Properties`, RoCSS supports transition and hover values.
 
 ### **transition**
 ```lua
-transition: {String}
+transition: {string}
 ```
 The transition key in a class info `dictionary` should be a `table` of properties that should be smoothly transitioned.
 
@@ -36,6 +36,12 @@ The `transition_time` key defines the time it should take **all** of the propert
 
 ### onhover
 ```lua
-onhover: {String: any}
+onhover: {string: any}
 ```
 The `onhover` key defines a dictionary of properties and their respective values that will be changed when a user's mouse enters a member of the class. All properties in this dictionary will be **immediately** changed unless listed in the [transition table](syntax.md#transition), in which case they will be `tweened` in the time defined as the [transition_time key](syntax.md#transition_time).
+
+### active
+```lua
+active: {string: any}
+```
+The `active` key defines a dictionary of properties and their respective values that will be changed when a user clicks their mouse on a member of the class. All properties in this dictionary will be **immediately** changed unless listed in the [transition table](syntax.md#transition), in which case they will be `tweened` in the time defined as the [transition_time key](syntax.md#transition_time).

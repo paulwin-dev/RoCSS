@@ -1,7 +1,7 @@
 local tags = game:GetService("CollectionService")
 local ts = game:GetService("TweenService")
 
-local plr = game.Players.LocalPlayer
+local plr: Player = game.Players.LocalPlayer
 
 local css = {}
 
@@ -25,7 +25,7 @@ local function HoverEffect(obj: TextButton, classinfo)
 	if obj:IsAncestorOf(game.StarterGui) then return end
 	local hoverinfo = classinfo.onhover
 	local original = {}
-	for prop,val in hoverinfo do
+	for prop, _ in hoverinfo do
 		original[prop] = obj[prop]
 	end
 
@@ -39,7 +39,9 @@ local function HoverEffect(obj: TextButton, classinfo)
 
 	local instantChanges = {}
 	for i,v in hoverinfo do
-		if not propsToTween[i] then instantChanges[i] = v end
+		if not propsToTween[i] then 
+			instantChanges[i] = v 
+		end
 	end
 
 	obj.MouseEnter:Connect(function()
@@ -60,8 +62,50 @@ local function HoverEffect(obj: TextButton, classinfo)
 			end
 		end
 	end)
+end
+
+local function ActiveEffect(obj: TextButton, classInfo)
+	if obj:IsAncestorOf(game.StarterGui) then return end
+
+	local activeInfo = classInfo.onhover
+	local original = {}
+	for prop, _ in activeInfo do
+		original[prop] = obj[prop]
+	end
 
 
+	local propsToTween = {}
+	if classInfo.transition then
+		for _,v in classInfo.transition do
+			propsToTween[v] = activeInfo[v]
+		end
+	end
+
+	local instantChanges = {}
+	for i,v in activeInfo do
+		if not propsToTween[i] then 
+			instantChanges[i] = v 
+		end
+	end
+
+	obj.MouseButton1Down:Connect(function()
+		PlayTween(obj, TweenInfo.new(classInfo.transition_time or .5), propsToTween)
+		for i,v in instantChanges do
+			obj[i] = v
+		end
+	end)
+
+	plr:GetMouse().Button1Up:Connect(function()
+		for i,v in original do
+			if classInfo.transition and table.find(classInfo.transition, i) then
+				local props = {}
+				props[i] = v
+				PlayTween(obj, TweenInfo.new(classInfo.transition_time or .5), props)
+			else
+				obj[i] = v
+			end
+		end
+	end)
 end
 
 
@@ -75,7 +119,13 @@ local function manageclass(classname, classinfo)
 		end
 
 
-		if classinfo.onhover then HoverEffect(v, classinfo) end
+		if classinfo.onhover then 
+			HoverEffect(v, classinfo) 
+		end
+
+		if classinfo.active then
+			ActiveEffect(v, classinfo)
+		end
 	end
 end
 
